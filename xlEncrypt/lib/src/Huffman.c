@@ -1,6 +1,42 @@
 #include"../inc/Huffman.h"
+void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode * ht)
+{
+    TreeNode* stack[20];
+    int stackP = -1;
+    TreeNode* p = root;
+    unsigned char data = 0;
+    unsigned char size = 0;
+    do
+    {
+        //压栈右子树
+        stack[++stackP] = p->right;
+        if (p->left == NULL && p->right == NULL)
+        {
+            ht[p->data].data = data;
+            ht[p->data].size = size;
+            stackP--;//出栈空的右子树
+            p = stack[stackP--];
+            while (p == NULL)
+            {
+                p = stack[stackP--];
+                if (stackP == -1)
+                    goto End;
+            }
+            data = data >> (size - (stackP + 1));
+            data |= 0x01;
+            size = stackP + 1;
+            stack[++stackP] = p->right;
+        }
+        data = data << 1;
+        size++;
+        p = p->left;
+    } while (1);
+End:
+    return;
+}
 
-void HFTBTreeToDeTable(TreeNode * root,HuffmanTable * ht)
+//哈夫曼树到解码表
+void HFTBTreeToDeTable(TreeNode * root, HuffmanDeNode* ht)
 {
     unsigned char buf[8];
     unsigned char f=0,num,n,bit;
@@ -17,7 +53,7 @@ void HFTBTreeToDeTable(TreeNode * root,HuffmanTable * ht)
             if(p->left==NULL||p->right==NULL)
             {
                 buf[n++] = p->data;
-                bit=i;
+                bit=j;
                 p = root;
             }
             if(num&f)
@@ -28,20 +64,21 @@ void HFTBTreeToDeTable(TreeNode * root,HuffmanTable * ht)
         
         if(n==0)
         {
-            ht->table[i].childTable = p;
+            ht[i].childTable = p;
         }
         else
         {
-            ht->table->list = (unsigned char*)malloc(n+2);
-            ht->table->list[0] = n;
-            ht->table->list[1] = bit+1;
-            for(j=2;2<n+2;j++)
-                ht->table->list[j] = buf[j-2];
+            ht[i].list = (unsigned char*)malloc(n+2);
+            ht[i].list[0] = n;
+            ht[i].list[1] = bit+1;
+            ht[i].childTable = NULL;
+            for(j=2;j<n+2;j++)
+                ht[i].list[j] = buf[j-2];
         }
         p = root;
     }
 }
-
+//频率表到哈夫曼树，返回根节点
 TreeNode * HFTBListToTree(unsigned int * tb)
 {
     List list;
@@ -53,6 +90,7 @@ TreeNode * HFTBListToTree(unsigned int * tb)
         p = (ListNode*)malloc(sizeof(ListNode));
         p->value = tb[i];
         p->pdata = malloc(sizeof(TreeNode));
+        p->next = NULL;
         getTreeNode(p->pdata)->data = i;
         getTreeNode(p->pdata)->w = tb[i];
         getTreeNode(p->pdata)->left = NULL;

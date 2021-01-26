@@ -17,21 +17,25 @@ typedef struct _treeNode
     struct _treeNode * right;
 }TreeNode;
 
-typedef struct _huffmanNode
+typedef struct _huffmanDeNode
 {
     unsigned char * list;//被转换列表
-    struct _huffmanNode * childTable;//子表 
-}HuffmanNode;
+    TreeNode * childTable;//子表 
+}HuffmanDeNode;
 
-typedef struct _huffmanTable
+typedef struct _huffmanEnNode
 {
-    HuffmanNode table[256];
-}HuffmanTable;
+    unsigned char data;
+    unsigned char size;
+}HuffmanEnNode;
 
 #define getTreeNode(x) ((TreeNode*)x)
 
 TreeNode * HFTBListToTree(unsigned int * tb);
-void HFTBTreeToTable(TreeNode * root,HuffmanTable * ht);
+void HFTBTreeToDeTable(TreeNode * root, HuffmanDeNode* ht);
+void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode* ht);
+
+
 
 
 #ifdef __cplusplus

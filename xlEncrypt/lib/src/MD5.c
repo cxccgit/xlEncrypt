@@ -1,5 +1,5 @@
 #include "../inc/MD5.h"
-
+#pragma warning(disable:4996)
 
 /* MD5 initialization. Begins an MD5 operation, writing a new context.
  */
