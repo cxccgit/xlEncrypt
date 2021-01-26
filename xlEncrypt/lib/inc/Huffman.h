@@ -25,7 +25,7 @@ typedef struct _huffmanDeNode
 
 typedef struct _huffmanEnNode
 {
-    unsigned char data;
+    unsigned int  data;
     unsigned char size;
 }HuffmanEnNode;
 
@@ -34,6 +34,8 @@ typedef struct _huffmanEnNode
 TreeNode * HFTBListToTree(unsigned int * tb);
 void HFTBTreeToDeTable(TreeNode * root, HuffmanDeNode* ht);
 void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode* ht);
+
+void encodeing(char* file, char* file1);
 
 
 

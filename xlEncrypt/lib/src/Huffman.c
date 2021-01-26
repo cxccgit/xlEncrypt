@@ -1,32 +1,37 @@
 #include"../inc/Huffman.h"
+#pragma warning(disable:4996)
 void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode * ht)
 {
     TreeNode* stack[20];
+    int deep[20];
     int stackP = -1;
     TreeNode* p = root;
-    unsigned char data = 0;
+    unsigned int  data = 0;
     unsigned char size = 0;
     do
     {
-        //Ñ¹Õ»ÓÒ×ÓÊ÷
-        stack[++stackP] = p->right;
+        //ÅÐ¶ÏÊÇ·ñÎªÒ¶×Ó½Úµã   
         if (p->left == NULL && p->right == NULL)
         {
             ht[p->data].data = data;
             ht[p->data].size = size;
-            stackP--;//³öÕ»¿ÕµÄÓÒ×ÓÊ÷
-            p = stack[stackP--];
-            while (p == NULL)
+            data <<= 1;
+            size++;
+            do
             {
-                p = stack[stackP--];
                 if (stackP == -1)
                     goto End;
-            }
-            data = data >> (size - (stackP + 1));
+                data >>= size - deep[stackP];
+                size = deep[stackP];
+                p = stack[stackP--];
+            }while (p == NULL);
             data |= 0x01;
-            size = stackP + 1;
-            stack[++stackP] = p->right;
+            continue;
         }
+        stackP++;
+        stack[stackP] = p->right;
+        deep[stackP] = size+1;
+
         data = data << 1;
         size++;
         p = p->left;
@@ -115,4 +120,57 @@ TreeNode * HFTBListToTree(unsigned int * tb)
         insertSort(&list,p);
     }
     return tnp;
+}
+
+void encodeing(char * file,char * file1)
+{
+    size_t size;
+    unsigned int fe[256];
+    unsigned char buffer[256];
+    for (int i = 0; i < 256; fe[i++] = 0);
+    FILE* fp = fopen(file, "rb");
+    do
+    {
+        size = fread(buffer, 1, 256, fp);
+        for (int i = 0; i < size; i++)
+            fe[buffer[i]]++;
+
+    } while (size == 256);
+    fclose(fp);
+    //ÆµÂÊ±í×ªÎª¹þ·òÂüÊ÷
+    TreeNode* p = HFTBListToTree(fe);
+    HuffmanEnNode hp[256];
+    //¹þ·òÂüÊ÷×ª¹þ·òÂü±àÂë±í
+    HFTBTreeToEnTable(p, hp);
+    FILE* fpOut = fopen(file1, "wb");
+    //Ð´»ô·òÂü±í
+    fwrite(fe, sizeof(unsigned int), 256, fpOut);
+    fp = fopen(file, "rb");
+    int j = 0;
+    unsigned char bitnum = 0;
+    unsigned int b = 0;
+    unsigned char* bP = &b;
+    do
+    {
+        size = fread(buffer, 1, 256, fp);
+        for (int i = 0; i < size; i++)
+        {
+            b <<= hp[buffer[i]].size;
+            b |= hp[buffer[i]].data;
+            bitnum += hp[buffer[i]].size;
+            if(bitnum >= 8) {
+                b <<= 8-bitnum%8;
+                do {
+                    bitnum -= 8;
+                    buffer[j++] = bP[bitnum / 8 + 1];
+                } while (bitnum >= 8);
+                b >>= 8 - bitnum;
+            }
+        }
+        fwrite(fe, sizeof(unsigned char), j, fpOut);
+        j = 0;
+    } while (size == 256);
+
+    fclose(fp);
+    fclose(fpOut);
 }
