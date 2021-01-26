@@ -13,15 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{4e3ba561-cbfe-4873-ad30-82c1746dc807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\inc">
+      <UniqueIdentifier>{18174602-0b8b-444c-8881-0b5f5b5321dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\src">
+      <UniqueIdentifier>{6e120f6e-f825-4026-a82a-99793418e391}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="lib\src\Huffman.c">
+      <Filter>lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\src\list.c">
+      <Filter>lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\src\MD5.c">
+      <Filter>lib\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\inc\FileType.h">
+      <Filter>lib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\inc\Huffman.h">
+      <Filter>lib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\inc\list.h">
+      <Filter>lib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\inc\MD5.h">
+      <Filter>lib\inc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

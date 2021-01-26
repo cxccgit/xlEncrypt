@@ -139,9 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lib\src\Huffman.c" />
+    <ClCompile Include="lib\src\list.c" />
+    <ClCompile Include="lib\src\MD5.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lib\inc\FileType.h" />
+    <ClInclude Include="lib\inc\Huffman.h" />
+    <ClInclude Include="lib\inc\list.h" />
+    <ClInclude Include="lib\inc\MD5.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
