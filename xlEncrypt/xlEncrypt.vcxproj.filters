@@ -30,9 +30,6 @@
     <ClCompile Include="lib\src\Huffman.c">
       <Filter>lib\src</Filter>
     </ClCompile>
-    <ClCompile Include="lib\src\list.c">
-      <Filter>lib\src</Filter>
-    </ClCompile>
     <ClCompile Include="lib\src\MD5.c">
       <Filter>lib\src</Filter>
     </ClCompile>
@@ -45,9 +42,6 @@
       <Filter>lib\inc</Filter>
     </ClInclude>
     <ClInclude Include="lib\inc\Huffman.h">
-      <Filter>lib\inc</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\inc\list.h">
       <Filter>lib\inc</Filter>
     </ClInclude>
     <ClInclude Include="lib\inc\MD5.h">

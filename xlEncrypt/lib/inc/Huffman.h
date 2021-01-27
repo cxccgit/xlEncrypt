@@ -3,7 +3,6 @@
 
 #include<stdio.h>
 #include<stdlib.h>
-#include"list.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -16,6 +15,7 @@ typedef struct _treeNode
     struct _treeNode * left;
     struct _treeNode * right;
 }TreeNode;
+
 
 typedef struct _huffmanDeNode
 {

@@ -1,5 +1,82 @@
 #include"../inc/Huffman.h"
 #pragma warning(disable:4996)
+
+//频率表到哈夫曼树，返回根节点
+TreeNode* HFTBListToTree(unsigned int* tb)
+{
+    TreeNode* p = (TreeNode*)malloc(sizeof(TreeNode));
+    TreeNode* ret = p;
+    TreeNode* moveP = NULL;
+    p->data = 0x00;
+    p->left = NULL;
+    p->right = NULL;
+    p->w = 0;
+    if (tb[0] == 0)
+        tb[0]++;
+    //排序
+    for (int i = 0; i < 256; i++) {
+        p = (TreeNode*)malloc(sizeof(TreeNode));
+        p->data = i;
+        p->left = NULL;
+        p->right = NULL;
+        p->w = tb[i];
+
+        for (moveP = ret; moveP->right != NULL && moveP->right->w <= p->w; moveP = moveP->right);
+
+        if (moveP->right == NULL)
+            moveP->right = p;
+        else {
+            p->right = moveP->right;
+            moveP->right = p;
+        }
+    }
+    //在每个节点下下挂一个值相同的节点作为该值的叶子节点
+    for (moveP = ret; moveP != NULL; moveP = moveP->right)
+    {
+        moveP->left = (TreeNode*)malloc(sizeof(TreeNode));
+        moveP->left->data = moveP->data;
+        moveP->left->left = NULL;
+        moveP->left->right = NULL;
+        moveP->left->w = moveP->w;
+        moveP->data = 0xFF;
+    }
+    while (1)
+    {
+        //权值求和
+        p = ret;
+        ret = ret->right;
+        p->w += p->right->w;
+        p->right->w = p->w;
+        //移动节点
+        moveP = p->right->left;
+        p->right->left = p;
+        p->right = moveP;
+        //准备插入
+        p = ret;
+        ret = ret->right;
+        //结束判断
+        if (ret == NULL)
+            break;
+        if (p->w <= ret->w)
+        {
+            p->left = ret;
+            ret = p;
+        }
+        else {
+            for (moveP = ret; moveP->left != NULL && moveP->left->w < p->w; moveP = moveP->left);
+            if (moveP->left == NULL)
+                moveP->left = p;
+            else {
+                p->left = moveP->left;
+                moveP->left = p;
+            }
+        }
+    }
+    ret = p->left;
+    free(p);
+    return ret;
+}
+//哈夫曼树到编码表
 void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode * ht)
 {
     TreeNode* stack[20];
@@ -31,7 +108,6 @@ void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode * ht)
         stackP++;
         stack[stackP] = p->right;
         deep[stackP] = size+1;
-
         data = data << 1;
         size++;
         p = p->left;
@@ -39,7 +115,6 @@ void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode * ht)
 End:
     return;
 }
-
 //哈夫曼树到解码表
 void HFTBTreeToDeTable(TreeNode * root, HuffmanDeNode* ht)
 {
@@ -83,44 +158,6 @@ void HFTBTreeToDeTable(TreeNode * root, HuffmanDeNode* ht)
         p = root;
     }
 }
-//频率表到哈夫曼树，返回根节点
-TreeNode * HFTBListToTree(unsigned int * tb)
-{
-    List list;
-    ListNode * p = NULL;
-    TreeNode * tnp = NULL;
-    initList(&list);
-    for(int i=0;i<256;i++)
-    {
-        p = (ListNode*)malloc(sizeof(ListNode));
-        p->value = tb[i];
-        p->pdata = malloc(sizeof(TreeNode));
-        p->next = NULL;
-        getTreeNode(p->pdata)->data = i;
-        getTreeNode(p->pdata)->w = tb[i];
-        getTreeNode(p->pdata)->left = NULL;
-        getTreeNode(p->pdata)->right = NULL;
-        insertSort(&list,p);
-    }
-    while(list.length>1)
-    {
-        tnp = (TreeNode*)malloc(sizeof(TreeNode));
-        tnp->data = 0;
-        tnp->left = list.head->pdata;
-        tnp->right = list.head->next->pdata;
-        tnp->w = tnp->left->w+tnp->right->w;
-
-        p = list.head;list.head = list.head->next;free(p);
-        p = list.head;list.head = list.head->next;free(p);
-        list.length-=2;
-
-        p = (ListNode*)malloc(sizeof(ListNode));
-        p->value = tnp->w;
-        p->pdata = tnp;
-        insertSort(&list,p);
-    }
-    return tnp;
-}
 
 void encodeing(char * file,char * file1)
 {
@@ -150,6 +187,7 @@ void encodeing(char * file,char * file1)
     unsigned char bitnum = 0;
     unsigned int b = 0;
     unsigned char* bP = &b;
+    unsigned char outBuf[256];
     do
     {
         size = fread(buffer, 1, 256, fp);
@@ -158,11 +196,13 @@ void encodeing(char * file,char * file1)
             b <<= hp[buffer[i]].size;
             b |= hp[buffer[i]].data;
             bitnum += hp[buffer[i]].size;
+            if (i == 255)
+                i = i;
             if(bitnum >= 8) {
                 b <<= 8-bitnum%8;
                 do {
                     bitnum -= 8;
-                    buffer[j++] = bP[bitnum / 8 + 1];
+                    outBuf[j++] = bP[bitnum / 8 + 1];
                 } while (bitnum >= 8);
                 b >>= 8 - bitnum;
             }

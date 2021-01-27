@@ -26,6 +26,7 @@ int main()
 	unsigned int fe[256];
 	size_t size;
 	unsigned char buffer[256];
+	//printf("%d",sizeof(S));
 #ifdef TESTFILE
 	srand((unsigned int)time(NULL));
 	FILE* fptest = fopen("test.b", "w");
@@ -52,7 +53,7 @@ int main()
 	TreeNode * p = HFTBListToTree(fe);
 	HuffmanEnNode hp[256];
 	HFTBTreeToEnTable(p, hp);*/
-	encodeing("main.exe","test.out");
+	encodeing("test.b","test.out");
 
 #endif
 #ifdef TESTHuffmanTree
