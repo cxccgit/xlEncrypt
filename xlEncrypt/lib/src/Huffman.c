@@ -92,15 +92,14 @@ void HFTBTreeToEnTable(TreeNode* root, HuffmanEnNode * ht)
         {
             ht[p->data].data = data;
             ht[p->data].size = size;
-            data <<= 1;
-            size++;
             do
             {
                 if (stackP == -1)
                     goto End;
                 data >>= size - deep[stackP];
                 size = deep[stackP];
-                p = stack[stackP--];
+                p = stack[stackP];
+                stackP--;
             }while (p == NULL);
             data |= 0x01;
             continue;

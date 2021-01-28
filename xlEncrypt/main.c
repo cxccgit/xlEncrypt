@@ -6,12 +6,12 @@
 #include"lib/inc/Huffman.h"
 #pragma warning(disable:4996)
 
-//#define TEST
+#define TEST
 
 #ifdef TEST
 
-//#define TESTHuffmanTree 
-#define TESTFILE
+#define TESTHuffmanTree 
+//#define TESTFILE
 
 #endif
 
